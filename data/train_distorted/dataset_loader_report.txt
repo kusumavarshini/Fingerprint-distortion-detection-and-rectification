@@ -1,0 +1,39 @@
+========================================================
+  TRAINING DATASET SUMMARY
+========================================================
+  Source       : data\train_distorted/
+  Shuffle seed : 42
+
+  Metric                              Value
+  ---------------------------- ------------
+  Total images                         4200
+  Clean (class 0)                      1050
+  Distorted (class 1)                  3150
+    - elastic                          1050
+    - local                            1050
+    - bending                          1050
+
+  Image dimensions                224 x 224
+  Channels                         1 (gray)
+  Dtype                             float32
+  Pixel range                        [0, 1]
+
+  Class distribution          
+    CLEAN  (0)                       25.0%
+    DISTORTED (1)                    75.0%
+
+  VERIFICATION
+  ----------------------------------------
+    [PASS] Total == 4200
+    [PASS] Clean == 1050
+    [PASS] Distorted == 3150
+    [PASS] Elastic == 1050
+    [PASS] Local == 1050
+    [PASS] Bending == 1050
+    [PASS] No read errors
+    [PASS] All float32 [0,1]
+    [PASS] Shape (N,224,224)
+
+========================================================
+  ALL CHECKS PASSED
+========================================================

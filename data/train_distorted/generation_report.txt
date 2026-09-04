@@ -1,0 +1,23 @@
+============================================================
+  TRAINING DISTORTION GENERATION REPORT
+============================================================
+  Source          : data\split\train/
+  Output          : data\train_distorted/
+  Master seed     : 42
+  Time elapsed    : 31.8s
+
+  Category                Count
+  -------------------- --------
+  Clean copies             1050
+  Elastic                  1050
+  Local                    1050
+  Bending                  1050
+  -------------------- --------
+  Total distorted          3150
+  TOTAL images             4200
+
+  Errors: 0
+
+============================================================
+  Original training split is UNCHANGED.
+============================================================

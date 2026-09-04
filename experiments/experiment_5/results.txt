@@ -1,0 +1,25 @@
+EXPERIMENT 5 - FINGERPRINT DISTORTION CLASSIFICATION
+
+Best Epoch: 7
+Validation F1: 0.8372
+Best Threshold: 0.18
+Validation F1 at Threshold: 0.9209
+
+TEST RESULTS
+Accuracy: 0.8889
+Precision: 0.9534
+Recall: 0.8178
+F1: 0.8804
+ROC-AUC: 0.9432
+Loss: 0.141470
+
+CONFUSION MATRIX
+TN: 216
+FP: 9
+FN: 41
+TP: 184
+
+PER-DISTORTION PERFORMANCE
+Elastic: 100% accuracy, 100% recall
+Local: 100% accuracy, 100% recall
+Bending: 45.33% accuracy, 45.33% recall

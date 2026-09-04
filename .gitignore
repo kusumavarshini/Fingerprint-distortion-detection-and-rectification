@@ -1,0 +1,29 @@
+# Datasets
+data/raw/
+dataset/
+*.jpg
+*.jpeg
+*.bmp
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# IDE
+.vscode/
+.idea/
+
+# Model files
+*.pth
+*.pt
+*.h5
+*.keras
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
