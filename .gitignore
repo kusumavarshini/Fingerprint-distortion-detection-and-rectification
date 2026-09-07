@@ -27,3 +27,10 @@ venv/
 # OS
 .DS_Store
 Thumbs.db
+# Generated rectification datasets
+data/rectification_train/
+data/rectification_val/
+data/rectification_test/
+data/rectification_split/
+# Experiment archives
+experiments/rectification_baseline.zip
