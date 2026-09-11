@@ -1,0 +1,297 @@
+{
+  "methodology": {
+    "severity_score": "Mean displacement magnitude of the distortion field",
+    "severity_formula": "score = mean(sqrt(dx^2 + dy^2))",
+    "severity_units": "pixels",
+    "field_source_note": "Severity was computed from GROUND-TRUTH displacement fields regenerated deterministically from clean images using the same distortion functions and seeds as generate_rectification_eval.py. The DDRNet checkpoint (experiments/ddrnet_baseline/best_model.pth) is absent from disk, so predicted fields could not be used. In a deployment setting with the checkpoint restored, predicted fields from DDRNet inference should be used instead. The severity.py module is designed for both; only the field source (dx, dy arrays) changes.",
+    "categorical_thresholds": {
+      "low_moderate_boundary": 4.2982,
+      "moderate_high_boundary": 5.9275,
+      "derivation": "training-set terciles (P33.33, P66.67)",
+      "training_samples": 3150,
+      "training_source": "experiments/distortion_analysis/distortion_metrics.csv"
+    },
+    "threshold_justification": "Thresholds are the global P33.33 and P66.67 of mean displacement magnitude across 3,150 training samples (1,050 per distortion type). Derived from training data only.",
+    "notes": [
+      "The continuous severity score (mean displacement) is the primary metric. Categorical labels are a convenience derived from training-set terciles.",
+      "Categorical severity labels correlate strongly with distortion type: local distortions are predominantly Low severity, elastic is predominantly High, bending spans all three.",
+      "Severity does not imply rectification success. Higher severity = larger predicted displacement that DDRNet must correct."
+    ]
+  },
+  "severity_results": {
+    "val": {
+      "overall": {
+        "n_samples": 675,
+        "severity_score_stats": {
+          "mean": 5.269059162064558,
+          "std": 1.6423650485651318,
+          "min": 1.9635618167391866,
+          "p25": 4.010131349887537,
+          "median": 5.036257604234937,
+          "p75": 6.4123097136259855,
+          "p90": 7.6415181534271115,
+          "p95": 8.288428369028829,
+          "max": 10.120366448577185
+        },
+        "severity_distribution": {
+          "Low": {
+            "count": 211,
+            "percent": 31.26
+          },
+          "Moderate": {
+            "count": 240,
+            "percent": 35.56
+          },
+          "High": {
+            "count": 224,
+            "percent": 33.19
+          }
+        }
+      },
+      "elastic": {
+        "n_samples": 225,
+        "severity_score_stats": {
+          "mean": 6.814798172653955,
+          "std": 1.3417548725555035,
+          "min": 4.149615560976007,
+          "p25": 5.717425475599783,
+          "median": 6.800278619357149,
+          "p75": 7.896150226480113,
+          "p90": 8.656565909266739,
+          "p95": 8.936954884302406,
+          "max": 10.120366448577185
+        },
+        "severity_distribution": {
+          "Low": {
+            "count": 3,
+            "percent": 1.33
+          },
+          "Moderate": {
+            "count": 62,
+            "percent": 27.56
+          },
+          "High": {
+            "count": 160,
+            "percent": 71.11
+          }
+        }
+      },
+      "local": {
+        "n_samples": 225,
+        "severity_score_stats": {
+          "mean": 3.8285992447312673,
+          "std": 0.8108140382656416,
+          "min": 1.9635618167391866,
+          "p25": 3.179250329231856,
+          "median": 3.846121491261861,
+          "p75": 4.435779161189693,
+          "p90": 4.884251828520672,
+          "p95": 5.1219484518724965,
+          "max": 6.034056544773405
+        },
+        "severity_distribution": {
+          "Low": {
+            "count": 153,
+            "percent": 68.0
+          },
+          "Moderate": {
+            "count": 71,
+            "percent": 31.56
+          },
+          "High": {
+            "count": 1,
+            "percent": 0.44
+          }
+        }
+      },
+      "bending": {
+        "n_samples": 225,
+        "severity_score_stats": {
+          "mean": 5.163780068808454,
+          "std": 1.0765898781761905,
+          "min": 3.3072475327789754,
+          "p25": 4.3110259956003985,
+          "median": 5.1354809628340705,
+          "p75": 6.111063587413702,
+          "p90": 6.7238634604781025,
+          "p95": 6.926632235175088,
+          "max": 7.258428510320648
+        },
+        "severity_distribution": {
+          "Low": {
+            "count": 55,
+            "percent": 24.44
+          },
+          "Moderate": {
+            "count": 107,
+            "percent": 47.56
+          },
+          "High": {
+            "count": 63,
+            "percent": 28.0
+          }
+        }
+      }
+    },
+    "test": {
+      "overall": {
+        "n_samples": 675,
+        "severity_score_stats": {
+          "mean": 5.2551133564095736,
+          "std": 1.6240794204044584,
+          "min": 2.1533205850636654,
+          "p25": 3.962200319974846,
+          "median": 5.052367547145236,
+          "p75": 6.444136560424342,
+          "p90": 7.540098324174089,
+          "p95": 8.194312561523573,
+          "max": 10.01672874299814
+        },
+        "severity_distribution": {
+          "Low": {
+            "count": 222,
+            "percent": 32.89
+          },
+          "Moderate": {
+            "count": 218,
+            "percent": 32.3
+          },
+          "High": {
+            "count": 235,
+            "percent": 34.81
+          }
+        }
+      },
+      "elastic": {
+        "n_samples": 225,
+        "severity_score_stats": {
+          "mean": 6.69247330763179,
+          "std": 1.3354484999106064,
+          "min": 3.9425878410442654,
+          "p25": 5.649452869653255,
+          "median": 6.662643663414853,
+          "p75": 7.7245536073741805,
+          "p90": 8.487859568953738,
+          "p95": 8.78814807009787,
+          "max": 10.01672874299814
+        },
+        "severity_distribution": {
+          "Low": {
+            "count": 2,
+            "percent": 0.89
+          },
+          "Moderate": {
+            "count": 71,
+            "percent": 31.56
+          },
+          "High": {
+            "count": 152,
+            "percent": 67.56
+          }
+        }
+      },
+      "local": {
+        "n_samples": 225,
+        "severity_score_stats": {
+          "mean": 3.774315910646182,
+          "std": 0.7763752488210119,
+          "min": 2.1533205850636654,
+          "p25": 3.153910584680948,
+          "median": 3.7986139339645546,
+          "p75": 4.341022368530773,
+          "p90": 4.764700274526481,
+          "p95": 5.113070733268678,
+          "max": 5.705935339737445
+        },
+        "severity_distribution": {
+          "Low": {
+            "count": 164,
+            "percent": 72.89
+          },
+          "Moderate": {
+            "count": 61,
+            "percent": 27.11
+          },
+          "High": {
+            "count": 0,
+            "percent": 0.0
+          }
+        }
+      },
+      "bending": {
+        "n_samples": 225,
+        "severity_score_stats": {
+          "mean": 5.29855085095075,
+          "std": 1.125197381688892,
+          "min": 3.314950515648119,
+          "p25": 4.3062319021624305,
+          "median": 5.2434149892393735,
+          "p75": 6.299295683218043,
+          "p90": 6.782062502236237,
+          "p95": 6.953971911991332,
+          "max": 7.202023280616788
+        },
+        "severity_distribution": {
+          "Low": {
+            "count": 56,
+            "percent": 24.89
+          },
+          "Moderate": {
+            "count": 86,
+            "percent": 38.22
+          },
+          "High": {
+            "count": 83,
+            "percent": 36.89
+          }
+        }
+      }
+    }
+  },
+  "rectification_effectiveness": {
+    "source": "C:\\Users\\kusum\\OneDrive\\Desktop\\fingerprint\\experiments\\ddrnet_baseline\\evaluation\\evaluation_results.csv",
+    "note": "These are pixel-level rectification effectiveness metrics comparing distorted and DDRNet-rectified images against the original clean fingerprint. They are NOT matching/recognition accuracy. Matching results did not consistently improve after rectification.",
+    "overall": {
+      "n_samples": 675,
+      "distorted_mae": 8.5784,
+      "rectified_mae": 8.3539,
+      "mae_improvement_percent": 2.62,
+      "distorted_rmse": 17.4331,
+      "rectified_rmse": 16.3422,
+      "rmse_improvement_percent": 6.26
+    },
+    "elastic": {
+      "n_samples": 225,
+      "distorted_mae": 9.4473,
+      "rectified_mae": 9.4032,
+      "mae_improvement_percent": 0.47,
+      "distorted_rmse": 19.275,
+      "rectified_rmse": 18.7148,
+      "rmse_improvement_percent": 2.91
+    },
+    "local": {
+      "n_samples": 225,
+      "distorted_mae": 7.3066,
+      "rectified_mae": 8.5429,
+      "mae_improvement_percent": -16.92,
+      "distorted_rmse": 14.6628,
+      "rectified_rmse": 16.7511,
+      "rmse_improvement_percent": -14.24
+    },
+    "bending": {
+      "n_samples": 225,
+      "distorted_mae": 8.9813,
+      "rectified_mae": 7.1157,
+      "mae_improvement_percent": 20.77,
+      "distorted_rmse": 18.3614,
+      "rectified_rmse": 13.5607,
+      "rmse_improvement_percent": 26.15
+    }
+  },
+  "checkpoint_epoch_discrepancy": {
+    "reported_in_final_report": "epoch 9",
+    "training_history_max_epoch": 8,
+    "checkpoint_epoch_field_on_disk": "N/A (checkpoint absent)",
+    "note_from_earlier_inspection": "When checkpoints/best_model.pth (the classifier checkpoint) was inspected via PyTorch, its epoch field was 7 (0-indexed = epoch 8 in 1-indexed). The DDRNet checkpoint is missing. MAX_EPOCHS=8 in train_ddrnet.py. training_history.json records epochs 1-8. The FINAL_REPORT.txt claim of epoch 9 cannot be reconciled with the training history and is documented here as a discrepancy."
+  }
+}

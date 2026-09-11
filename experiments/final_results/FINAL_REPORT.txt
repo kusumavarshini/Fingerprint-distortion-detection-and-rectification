@@ -11,7 +11,25 @@ Family Fingerprint Dataset: 100 families, 1,500 images (512x512 source images, p
 Experiment 5 test: accuracy 0.8889, precision 0.9534, recall 0.8178, F1 0.8804, ROC-AUC 0.9432 (TN=216, FP=9, FN=41, TP=184).
 
 4. DDRNet_DIR rectification
-Frozen best checkpoint: experiments/ddrnet_baseline/best_model.pth (epoch 9). Existing pixel evaluation: MAE improvement 9.54%, RMSE improvement 11.06%; bending RMSE improvement 30.56%.
+Frozen best checkpoint: experiments/ddrnet_baseline/best_model.pth.
+[CHECKPOINT EPOCH DISCREPANCY — FLAGGED, NOT CORRECTED]
+  FINAL_REPORT previously stated "epoch 9". train_ddrnet.py uses MAX_EPOCHS=8.
+  training_history.json records only epochs 1-8 (epoch 8 has the best validation
+  loss: 2.4959). The checkpoint's internal epoch field was 7 (0-indexed), i.e.
+  epoch 8 (1-indexed). The DDRNet checkpoint is no longer present on disk;
+  the evaluation_results.csv was produced before the checkpoint was lost.
+  "Epoch 9" in the original FINAL_REPORT could not be reconciled with the
+  recorded training history and is documented as a discrepancy.
+Existing pixel evaluation (from evaluation_results.csv, 675 samples):
+  Overall MAE:  8.5784 -> 8.3539 (improvement: 2.62%)
+  Overall RMSE: 17.4331 -> 16.3422 (improvement: 6.26%)
+  Bending RMSE: 18.3614 -> 13.5607 (improvement: 26.15%)
+  Elastic RMSE: 19.2750 -> 18.7148 (improvement: 2.91%)
+  Local   RMSE: 14.6628 -> 16.7511 (degradation: -14.24%)
+Note: bending shows the strongest pixel-level improvement. Local distortion
+rectification degraded pixel quality in this evaluation run. These figures
+describe pixel-level rectification effectiveness only; matching results
+(section 7) did not consistently improve.
 
 5. Matching methodology
 MINDTCT minutiae extraction and Bozorth3 scoring. Every split has 45 identities, 450 cross-impression genuine pairs and 315 cross-family, same-member-type impostor pairs. Test identities are absent from train and validation. Thresholds use validation EER only; test labels were never used to select a threshold.
@@ -42,3 +60,50 @@ The result is reported as observed. Pixel-level geometric improvement does not b
 
 10. Limitations and future improvements
 Scores are weakly separated and the test protocol has many zero/low Bozorth3 scores, so threshold accuracy is unstable; ROC-AUC is more threshold-independent. Future work should improve minutiae preservation/orientation consistency, train rectification with matcher-aware losses, evaluate additional real distortions, and use a stronger but independently validated matcher.
+
+11. Distortion severity estimation (added)
+IMPORTANT — FIELD SOURCE LIMITATION:
+  The original trained DDRNet checkpoint (experiments/ddrnet_baseline/best_model.pth)
+  is permanently unavailable. It was never committed to version control (*.pth is in
+  .gitignore), there are no git stashes, and no copies exist anywhere on disk. A full
+  search of the project tree, git history (4 commits), and the Desktop confirmed this.
+  DDRNet-predicted-field severity evaluation could not be completed.
+
+  The severity results below are based on DETERMINISTICALLY REGENERATED GROUND-TRUTH
+  displacement fields. These were produced using the identical distortion functions and
+  seeds as generate_rectification_eval.py — not from DDRNet inference. They must not
+  be described as severity predictions from DDRNet.
+
+Severity score definition (field-source-independent):
+  score = mean(sqrt(dx^2 + dy^2))   [mean displacement magnitude, pixels]
+  The formula applies to any displacement field — GT or predicted. The severity.py
+  module accepts any dx/dy arrays; only the source of those arrays changes.
+
+Categorical thresholds derived from training-set terciles (3,150 samples, training data only):
+  Low:      mean displacement < 4.2982 px  (training P33.33)
+  Moderate: 4.2982 <= mean displacement < 5.9275 px  (training P33.33 – P66.67)
+  High:     mean displacement >= 5.9275 px  (training P66.67)
+
+Severity on validation set (675 samples = 225 images x 3 distortion types):
+  Field source: ground-truth displacement fields (NOT DDRNet predictions)
+  Overall:  mean=5.269 px  [Low=31.3%, Moderate=35.6%, High=33.2%]
+  Elastic:  mean=6.815 px  [Low=1.3%,  Moderate=27.6%, High=71.1%]
+  Local:    mean=3.829 px  [Low=68.0%, Moderate=31.6%, High=0.4%]
+  Bending:  mean=5.164 px  [Low=24.4%, Moderate=47.6%, High=28.0%]
+
+Severity on test set (675 samples):
+  Field source: ground-truth displacement fields (NOT DDRNet predictions)
+  Overall:  mean=5.255 px  [Low=32.9%, Moderate=32.3%, High=34.8%]
+  Elastic:  mean=6.692 px  [Low=0.9%,  Moderate=31.6%, High=67.6%]
+  Local:    mean=3.774 px  [Low=72.9%, Moderate=27.1%, High=0.0%]
+  Bending:  mean=5.299 px  [Low=24.9%, Moderate=38.2%, High=36.9%]
+
+Note: categorical severity correlates strongly with distortion type because
+different synthetic distortion functions generate inherently different displacement
+magnitudes. Elastic is predominantly High, local predominantly Low, bending spans
+all three. This is documented, not treated as a limitation.
+
+Files: severity.py (module + CLI), evaluate_severity.py,
+       experiments/severity_evaluation/severity_results_val.csv,
+       experiments/severity_evaluation/severity_results_test.csv,
+       experiments/severity_evaluation/severity_summary.json
