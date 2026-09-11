@@ -38,8 +38,6 @@ experiments/rectification_baseline.zip
 # Generated DDRNet datasets
 data/ddrnet_train/
 data/ddrnet_val/
-data/rectified_ddrnet_test/
-data/rectified_ddrnet_val/
 data/rectified_test/
 
 # Local diagnostic visualizations
