@@ -28,7 +28,7 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader, random_split
 
-from rectification_dataset import FingerprintRectificationDataset
+from archive.rectification_dataset import FingerprintRectificationDataset
 from rectification_model import (
     FingerprintRectificationNet,
     count_parameters

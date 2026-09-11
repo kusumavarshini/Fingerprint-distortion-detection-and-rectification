@@ -1,0 +1,58 @@
+{
+  "elastic": {
+    "dx_mae": 2.152097430229187,
+    "dx_rmse": 2.801549205780029,
+    "dy_mae": 2.179981536865234,
+    "dy_rmse": 2.904321675300598,
+    "magnitude_gt_mean": 5.902738456726074,
+    "magnitude_pred_mean": 4.9754430770874025,
+    "magnitude_mae": 2.1326587343215944,
+    "magnitude_rmse": 2.786642541885376,
+    "dx_correlation": 0.8188686097651551,
+    "dy_correlation": 0.8056407825912002,
+    "magnitude_correlation": 0.6179660041968572,
+    "vector_rmse": 4.040878248214722
+  },
+  "local": {
+    "dx_mae": 1.8311194276809692,
+    "dx_rmse": 2.3013607549667356,
+    "dy_mae": 1.6903037452697753,
+    "dy_rmse": 2.158273286819458,
+    "magnitude_gt_mean": 3.4625182151794434,
+    "magnitude_pred_mean": 2.7616491985321043,
+    "magnitude_mae": 1.5899052476882936,
+    "magnitude_rmse": 2.007842698097229,
+    "dx_correlation": 0.5972407593285687,
+    "dy_correlation": 0.6504548503965286,
+    "magnitude_correlation": 0.3215227714594849,
+    "vector_rmse": 3.1714451694488526
+  },
+  "bending": {
+    "dx_mae": 0.8715691232681274,
+    "dx_rmse": 1.205585845708847,
+    "dy_mae": 0.854497994184494,
+    "dy_rmse": 1.1204102849960327,
+    "magnitude_gt_mean": 4.933553562164307,
+    "magnitude_pred_mean": 4.24025517463684,
+    "magnitude_mae": 1.138677361011505,
+    "magnitude_rmse": 1.4918817639350892,
+    "dx_correlation": 0.8679066260163276,
+    "dy_correlation": 0.9156296173441489,
+    "magnitude_correlation": 0.8738347184025704,
+    "vector_rmse": 1.7403655219078065
+  },
+  "overall": {
+    "dx_mae": 1.6182619937260945,
+    "dx_rmse": 2.102831935485204,
+    "dy_mae": 1.5749277587731678,
+    "dy_rmse": 2.0610017490386965,
+    "magnitude_gt_mean": 4.7662700780232745,
+    "magnitude_pred_mean": 3.992449150085449,
+    "magnitude_mae": 1.6204137810071308,
+    "magnitude_rmse": 2.0954556679725647,
+    "dx_correlation": 0.7613386650366839,
+    "dy_correlation": 0.7905750834439592,
+    "magnitude_correlation": 0.6044411646863042,
+    "vector_rmse": 2.9842296465237936
+  }
+}

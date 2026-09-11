@@ -1,0 +1,114 @@
+[
+  {
+    "epoch": 1,
+    "learning_rate": 0.0001,
+    "train": {
+      "loss": 3.3368391609191894,
+      "displacement_loss": 2.8386266694750106,
+      "orientation_loss": 4.982124843597412
+    },
+    "validation": {
+      "loss": 3.247952223883735,
+      "displacement_loss": 2.7619223329755993,
+      "orientation_loss": 4.860298844090215
+    }
+  },
+  {
+    "epoch": 2,
+    "learning_rate": 0.0001,
+    "train": {
+      "loss": 3.167077967401535,
+      "displacement_loss": 2.689940460598658,
+      "orientation_loss": 4.7713750933087065
+    },
+    "validation": {
+      "loss": 3.1487016285790337,
+      "displacement_loss": 2.657465153800117,
+      "orientation_loss": 4.91236467855948
+    }
+  },
+  {
+    "epoch": 3,
+    "learning_rate": 0.0001,
+    "train": {
+      "loss": 3.0063721376752097,
+      "displacement_loss": 2.549754724805317,
+      "orientation_loss": 4.566174160790822
+    },
+    "validation": {
+      "loss": 2.9600113116370306,
+      "displacement_loss": 2.4969701717517996,
+      "orientation_loss": 4.63041134375113
+    }
+  },
+  {
+    "epoch": 4,
+    "learning_rate": 0.0001,
+    "train": {
+      "loss": 2.8435272069961304,
+      "displacement_loss": 2.3911500503903342,
+      "orientation_loss": 4.523771535782587
+    },
+    "validation": {
+      "loss": 2.814685180452135,
+      "displacement_loss": 2.360157940122816,
+      "orientation_loss": 4.5452724117702905
+    }
+  },
+  {
+    "epoch": 5,
+    "learning_rate": 0.0001,
+    "train": {
+      "loss": 2.52578263131399,
+      "displacement_loss": 2.076108819567968,
+      "orientation_loss": 4.496738084762815
+    },
+    "validation": {
+      "loss": 2.938446553548177,
+      "displacement_loss": 2.476626923525775,
+      "orientation_loss": 4.6181962910404915
+    }
+  },
+  {
+    "epoch": 6,
+    "learning_rate": 0.0001,
+    "train": {
+      "loss": 2.2545050226695955,
+      "displacement_loss": 1.8081576906310188,
+      "orientation_loss": 4.463473254612514
+    },
+    "validation": {
+      "loss": 2.7868830663186532,
+      "displacement_loss": 2.3372561098028113,
+      "orientation_loss": 4.496269623085305
+    }
+  },
+  {
+    "epoch": 7,
+    "learning_rate": 0.0001,
+    "train": {
+      "loss": 2.156450275693621,
+      "displacement_loss": 1.7157988298128521,
+      "orientation_loss": 4.406514385768346
+    },
+    "validation": {
+      "loss": 2.919452941329391,
+      "displacement_loss": 2.4567865368171975,
+      "orientation_loss": 4.626664067021123
+    }
+  },
+  {
+    "epoch": 8,
+    "learning_rate": 0.0001,
+    "train": {
+      "loss": 2.0882703088578722,
+      "displacement_loss": 1.6525080700904604,
+      "orientation_loss": 4.357622331891741
+    },
+    "validation": {
+      "loss": 2.4959232333854393,
+      "displacement_loss": 2.07053088400099,
+      "orientation_loss": 4.25392352492721
+    }
+  }
+]

@@ -1,0 +1,44 @@
+FINGERPRINT DISTORTION DETECTION AND RECTIFICATION — FINAL REPORT
+========================================================================
+
+1. Project objective
+Assess whether DDRNet_DIR rectification improves MINDTCT + Bozorth3 verification of synthetically distorted fingerprints against clean fingerprints.
+
+2. Dataset and split
+Family Fingerprint Dataset: 100 families, 1,500 images (512x512 source images, processed to 224x224). Family-disjoint split: 70 train / 15 validation / 15 test families (1,050 / 225 / 225 images).
+
+3. Frozen distortion classifier
+Experiment 5 test: accuracy 0.8889, precision 0.9534, recall 0.8178, F1 0.8804, ROC-AUC 0.9432 (TN=216, FP=9, FN=41, TP=184).
+
+4. DDRNet_DIR rectification
+Frozen best checkpoint: experiments/ddrnet_baseline/best_model.pth (epoch 9). Existing pixel evaluation: MAE improvement 9.54%, RMSE improvement 11.06%; bending RMSE improvement 30.56%.
+
+5. Matching methodology
+MINDTCT minutiae extraction and Bozorth3 scoring. Every split has 45 identities, 450 cross-impression genuine pairs and 315 cross-family, same-member-type impostor pairs. Test identities are absent from train and validation. Thresholds use validation EER only; test labels were never used to select a threshold.
+
+6. Test matching / verification results
+Condition, AUC, genuine mean, impostor mean, separation, EER, threshold, accuracy, FAR, FRR
+clean_to_clean, 0.5473, 0.0711, 0.0453, 0.0258, 0.4560, 0.0400, 0.5033, 0.2222, 0.6889
+distorted_elastic, 0.5559, 0.0642, 0.0348, 0.0294, 0.4495, 0.0400, 0.5111, 0.2159, 0.6800
+rectified_elastic, 0.5440, 0.0544, 0.0370, 0.0174, 0.4578, 0.0400, 0.4980, 0.1968, 0.7156
+distorted_local, 0.5447, 0.0615, 0.0357, 0.0258, 0.4605, 0.0400, 0.4980, 0.2222, 0.6978
+rectified_local, 0.5463, 0.0550, 0.0305, 0.0244, 0.4583, 0.0200, 0.4967, 0.2032, 0.7133
+distorted_bending, 0.5598, 0.0633, 0.0354, 0.0279, 0.4448, 0.0200, 0.5137, 0.2095, 0.6800
+rectified_bending, 0.5548, 0.0504, 0.0225, 0.0278, 0.4470, 0.0200, 0.4993, 0.1429, 0.7511
+
+7. Distorted versus DDRNet-rectified AUC
+Distortion, distorted AUC, rectified AUC, change, improved?
+elastic, 0.5559, 0.5440, -0.0119, False
+local, 0.5447, 0.5463, +0.0016, True
+bending, 0.5598, 0.5548, -0.0050, False
+
+8. Minutiae preservation findings
+bending: count clean/distorted/rectified = 20.24/17.62/16.27; spatial match rate distorted/rectified = 0.2558/0.2073.
+elastic: count clean/distorted/rectified = 20.24/19.72/18.99; spatial match rate distorted/rectified = 0.2013/0.1950.
+local: count clean/distorted/rectified = 20.24/17.74/17.32; spatial match rate distorted/rectified = 0.2467/0.2341.
+
+9. Conclusion
+The result is reported as observed. Pixel-level geometric improvement does not by itself establish improved MINDTCT/Bozorth3 recognition. AUC and the validation-calibrated verification measures are the primary recognition evidence.
+
+10. Limitations and future improvements
+Scores are weakly separated and the test protocol has many zero/low Bozorth3 scores, so threshold accuracy is unstable; ROC-AUC is more threshold-independent. Future work should improve minutiae preservation/orientation consistency, train rectification with matcher-aware losses, evaluate additional real distortions, and use a stronger but independently validated matcher.
