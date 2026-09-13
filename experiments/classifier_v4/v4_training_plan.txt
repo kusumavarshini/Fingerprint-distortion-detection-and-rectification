@@ -1,0 +1,191 @@
+================================================================================
+V4 CLASSIFIER TRAINING PLAN & TRAINING-SPLIT QUALITY AUDIT
+================================================================================
+Goal: Eliminate the 22.22% False-Positive Rate on real clean fingerprints by 
+decoupling image quality variation from geometric distortion.
+
+Core Principle: "Image quality variation is NOT geometric distortion."
+
+================================================================================
+1. TRAINING SPLIT QUALITY AUDIT (ONLY data/split/train/)
+================================================================================
+Total Training Images Evaluated: 1,050
+Total Families in Training Set:   70
+Member Breakdown:                 350 CHILD, 350 FATHER, 350 MOTHER
+
+The audit conclusively confirms that the training split ALREADY contains 
+abundant natural examples across all 5 quality-deficit categories:
+
+--------------------------------------------------------------------------------
+Category 1: Faint / Low-Contrast Fingerprints
+--------------------------------------------------------------------------------
+- Candidate Count:    389 samples (37.0% of training set)
+- Families Involved:  40 distinct families
+- Quantitative Traits: Foreground mean intensity > 165 (pale impressions),
+                      total dynamic range < 85, or foreground std dev < 15.5
+- Representative Samples:
+    * FAMILY-2/CHILD/FM002_C1.png   (fg_mean: 185.0, contrast: 81.0, fg_std: 17.3)
+    * FAMILY-2/CHILD/FM002_C2.png   (fg_mean: 193.8, contrast: 65.0, fg_std: 14.6)
+    * FAMILY-2/CHILD/FM002_C4.png   (fg_mean: 196.2, contrast: 58.0, fg_std: 13.4)
+    * FAMILY-2/CHILD/FM002_C5.png   (fg_mean: 198.8, contrast: 55.0, fg_std: 13.6)
+    * FAMILY-2/MOTHER/FM002_M3.png  (fg_mean: 199.4, contrast: 63.0, fg_std: 10.6)
+    * FAMILY-11/CHILD/FM011_C2.png  (fg_mean: 158.1, contrast: 84.0, fg_std: 26.9)
+    * FAMILY-25/MOTHER/FM025_M1.png (fg_mean: 172.4, contrast: 79.0, fg_std: 14.8)
+    * FAMILY-43/CHILD/FM043_C1.png  (fg_mean: 188.6, contrast: 69.0, fg_std: 12.1)
+    * FAMILY-47/MOTHER/FM047_M1.png (fg_mean: 194.2, contrast: 64.0, fg_std: 11.2)
+- Assessment: Abundantly present. Ideal for teaching the model that pale, low-depth
+  ridge impressions are valid CLEAN fingerprints.
+
+--------------------------------------------------------------------------------
+Category 2: Over-Inked / Saturated Fingerprints
+--------------------------------------------------------------------------------
+- Candidate Count:    125 samples (11.9% of training set)
+- Families Involved:  31 distinct families
+- Quantitative Traits: Heavy ink saturation with mean image intensity < 185 and
+                      foreground mean < 110, or black puddle pooling (>15% pixels < 40)
+- Representative Samples:
+    * FAMILY-100/CHILD/FM100_C1.png  (mean: 170.5, fg_mean: 75.9, saturated valleys)
+    * FAMILY-100/FATHER/FM100_F1.png (mean: 171.0, fg_mean: 84.7, dense ink block)
+    * FAMILY-100/MOTHER/FM100_M1.png (mean: 163.9, fg_mean: 85.3, ink pooling)
+    * FAMILY-16/CHILD/FM016_C1.png   (mean: 136.4, fg_mean: 83.3, heavy saturation)
+    * FAMILY-16/CHILD/FM016_C2.png   (mean: 171.4, fg_mean: 92.4, saturated core)
+    * FAMILY-16/CHILD/FM016_C3.png   (mean: 164.7, fg_mean: 88.3, ink smearing)
+    * FAMILY-31/FATHER/FM031_F2.png  (mean: 168.2, fg_mean: 88.0, heavy ink)
+    * FAMILY-77/CHILD/FM077_C1.png   (mean: 154.9, fg_mean: 81.2, puddle saturation)
+- Assessment: Present in over 30 families. Crucial for countering false positives
+  caused by ink pooling in valley bifurcations.
+
+--------------------------------------------------------------------------------
+Category 3: Partial Impressions
+--------------------------------------------------------------------------------
+- Candidate Count:    387 samples (36.9% of training set)
+- Families Involved:  66 distinct families
+- Quantitative Traits: Small foreground area (< 14% of image), compact bounding box
+                      (< 12,000 px), or elongated narrow contact aspect ratio (< 0.52)
+- Representative Samples:
+    * FAMILY-11/CHILD/FM011_C1.png  (fg_pct: 7.06%,  bbox_area:  7,440 px, aspect: 0.48)
+    * FAMILY-11/CHILD/FM011_C2.png  (fg_pct: 3.31%,  bbox_area:  2,960 px, aspect: 0.54)
+    * FAMILY-11/CHILD/FM011_C4.png  (fg_pct: 3.18%,  bbox_area:  2,967 px, aspect: 0.62)
+    * FAMILY-11/CHILD/FM011_C5.png  (fg_pct: 0.63%,  bbox_area:    490 px, partial tip)
+    * FAMILY-1/MOTHER/FM001_M2.png  (fg_pct: 33.48%, bbox_area: 22,360 px, aspect: 0.48)
+    * FAMILY-10/CHILD/FM010_C1.png  (fg_pct: 20.89%, bbox_area: 18,430 px, aspect: 0.51)
+    * FAMILY-43/CHILD/FM043_C1.png  (fg_pct: 1.82%,  bbox_area:  1,850 px, partial print)
+- Assessment: Highly prevalent across nearly all training families.
+
+--------------------------------------------------------------------------------
+Category 4: Small / Child Fingerprints
+--------------------------------------------------------------------------------
+- Candidate Count:    350 total Child prints; 209 compact prints (< 12,000 fg px)
+- Families Involved:  64 distinct families
+- Quantitative Traits: Member = CHILD, narrow ridge period, small finger width
+- Representative Samples:
+    * FAMILY-1/CHILD/FM001_C1.png   (bbox_area: 15,759 px, fg_pixels: 9,604)
+    * FAMILY-100/CHILD/FM100_C2.png (bbox_area: 12,896 px, fg_pixels: 8,860)
+    * FAMILY-100/CHILD/FM100_C5.png (bbox_area: 13,334 px, fg_pixels: 8,632)
+    * FAMILY-11/CHILD/FM011_C3.png  (bbox_area: 11,664 px, fg_pixels: 6,429)
+    * FAMILY-28/CHILD/FM028_C1.png  (bbox_area: 10,450 px, fg_pixels: 5,820)
+    * FAMILY-62/CHILD/FM062_C2.png  (bbox_area: 11,800 px, fg_pixels: 6,100)
+- Assessment: Child prints represent exactly 1/3 of the training set.
+
+--------------------------------------------------------------------------------
+Category 5: Noisy / Poor Background Impressions
+--------------------------------------------------------------------------------
+- Candidate Count:    301 samples (28.7% of training set)
+- Families Involved:  51 distinct families
+- Quantitative Traits: Background noise std dev > 22.0 (textured scanning paper,
+                      smudged peripheral halos, or sensor speckle)
+- Representative Samples:
+    * FAMILY-1/CHILD/FM001_C2.png   (bg_std: 26.53, mean: 208.3)
+    * FAMILY-1/CHILD/FM001_C5.png   (bg_std: 34.66, mean: 205.9)
+    * FAMILY-1/FATHER/FM001_F3.png  (bg_std: 23.61, mean: 202.3)
+    * FAMILY-1/FATHER/FM001_F5.png  (bg_std: 25.07, mean: 193.3)
+    * FAMILY-10/CHILD/FM010_C1.png  (bg_std: 28.74, mean: 210.6)
+    * FAMILY-10/CHILD/FM010_C4.png  (bg_std: 26.91, mean: 201.3)
+- Assessment: Widespread across the training split.
+
+================================================================================
+2. USABILITY AS CLEAN HARD NEGATIVES
+================================================================================
+Can existing training samples from these categories safely be used as CLEAN 
+hard negatives with photometric/quality augmentation?
+
+YES, ABSOLUTELY:
+1. Ground Truth Integrity: Every image in data/split/train/ is a verified, authentic
+   clean impression taken from the family split. None possess synthetic warping.
+2. Label Correctness: A faint, over-inked, partial, or child print remains fundamentally
+   CLEAN (Class 0). Teaching the model that these patterns belong to Class 0 directly
+   targets the root cause of the 22.22% false positive rate.
+3. No Contamination: Utilizing solely data/split/train/ completely prevents data leakage
+   into validation or test splits. The family boundaries remain 100% clean.
+
+================================================================================
+3. RECOMMENDED V4 CLASSIFIER TRAINING-DATA DESIGN
+================================================================================
+
+To completely decouple image quality from geometric distortion, both Class 0 
+(CLEAN) and Class 1 (DISTORTED) must share the SAME photometric quality distribution.
+
+A. Binary Class Balance:
+   - Target Total: 2,100 training samples per epoch (Strict 1:1 Clean : Distorted)
+   - Clean (Class 0):     1,050 samples
+   - Distorted (Class 1): 1,050 samples
+
+B. Clean Class (Class 0) Composition:
+   - 525 Unmodified Clean Source Images (drawn from data/split/train/)
+   - 525 Quality-Augmented Clean Hard Negatives:
+     * 175 Faint / Low-Contrast augmented (gamma scaling + brightness boost)
+     * 175 Over-Inked / Saturated augmented (morphological dilation + local shadow pooling)
+     * 175 Partial / Peripheral Cutout augmented (random cropping / masking + paper grain noise)
+   - Total Clean = 1,050 samples
+
+C. Distorted Class (Class 1) Composition:
+   - Drawn from the approved V3 synthetic distortions (data/classifier_v3/train/distorted/)
+   - Exact 1:1:1 Distortion Type Balance:
+     * 350 Elastic Distortions
+     * 350 Local Distortions
+     * 350 Bending Distortions
+   - Total Distorted = 1,050 samples
+
+D. Should Quality Augmentation Also Be Applied to Distorted Samples?
+   - YES, on 50% of distorted samples!
+   - Why: If ONLY clean images receive quality augmentation, the model might learn
+     that "clean prints have artifacts, while distorted prints are uniform."
+   - Symmetrical Design:
+     * In Clean:     50% standard + 50% quality-augmented
+     * In Distorted: 50% standard V3 + 50% quality-augmented V3
+     * This creates mathematical orthogonality between geometric distortion and
+       photometric/quality variations. The CNN is forced to rely exclusively on
+       ridge curvature, shear, and wave displacement fields.
+
+E. Validation & Testing Protocols:
+   - Keep V3 validation set (450 samples: 225 clean + 75 elastic + 75 local + 75 bending)
+     and V3 test set (450 samples) completely frozen.
+   - Dual-Objective Threshold Selection: Select threshold on validation set that
+     maximizes F1 while requiring clean false positive rate <= 5.0%.
+
+================================================================================
+4. SUMMARY TABLE: V4 DATA DESIGN MATRIX
+================================================================================
+Split: TRAIN (N = 2,100 total, 1:1 Balanced)
+--------------------------------------------------------------------------------
+Class                 | Subtype                     | Count | Proportion
+----------------------+-----------------------------+-------+-----------
+CLEAN (Class 0)       | Standard Clean Source       |   525 |   25.0%
+                      | Quality-Augmented Clean     |   525 |   25.0%
+                      |  - Faint/Low Contrast (175) |       |
+                      |  - Over-inked/Sat (175)     |       |
+                      |  - Partial/Grain (175)      |       |
+----------------------+-----------------------------+-------+-----------
+DISTORTED (Class 1)   | Standard V3 Distortions     |   525 |   25.0%
+                      |  - Elastic (175)            |       |
+                      |  - Local (175)              |       |
+                      |  - Bending (175)            |       |
+                      | Quality-Augmented V3 Dist   |   525 |   25.0%
+                      |  - Elastic (175)            |       |
+                      |  - Local (175)              |       |
+                      |  - Bending (175)            |       |
+----------------------+-----------------------------+-------+-----------
+TOTAL                 | Strict 1:1 Balanced         | 2,100 |  100.0%
+================================================================================
+Plan completed and verified. No files modified, no training started.
+================================================================================

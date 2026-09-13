@@ -1,0 +1,104 @@
+======================================================================
+FULL V3 SYNTHETIC DISTORTION CLASSIFIER DATASET AUDIT REPORT
+======================================================================
+
+1. DATASET COUNTS SUMMARY
+-----------------------------------
+Split [TRAIN]:
+  Clean Source:        1050
+  Elastic Distorted:   1050
+  Local Distorted:     1050
+  Bending Distorted:   1050
+  Total Distorted:     3150
+  Total Images:        4200
+  Ratio Dist/Clean:   3.0:1 (Balanced: 1 elastic, 1 local, 1 bending per clean)
+
+Split [VAL]:
+  Clean Source:         225
+  Elastic Distorted:    225
+  Local Distorted:      225
+  Bending Distorted:    225
+  Total Distorted:      675
+  Total Images:         900
+  Ratio Dist/Clean:   3.0:1 (Balanced: 1 elastic, 1 local, 1 bending per clean)
+
+Split [TEST]:
+  Clean Source:         225
+  Elastic Distorted:    225
+  Local Distorted:      225
+  Bending Distorted:    225
+  Total Distorted:      675
+  Total Images:         900
+  Ratio Dist/Clean:   3.0:1 (Balanced: 1 elastic, 1 local, 1 bending per clean)
+
+OVERALL TOTALS:
+  Total Clean:         1500
+  Total Distorted:     4500
+  Total All Images:    6000
+  Total Fields (.npz): 4500
+  Total Masks (.png):  1500
+
+2. DISTORTION QUALITY METRICS BY TYPE (Min / Mean / Median / Max)
+----------------------------------------------------------------------
+
+--- ELASTIC DISTORTION (N = 1500) ---
+  Foreground Mean Displacement (px)        | Min:    2.28 | Mean:   10.91 | Median:   10.99 | Max:   15.02
+  Foreground Median Displacement (px)      | Min:    2.21 | Mean:   10.83 | Median:   10.91 | Max:   15.41
+  Foreground P95 Displacement (px)         | Min:    3.24 | Mean:   18.17 | Median:   18.38 | Max:   25.04
+  Foreground Max Displacement (px)         | Min:    3.29 | Mean:   21.57 | Median:   21.95 | Max:   30.35
+  Background Mean Displacement (px)        | Min:    0.04 | Mean:    0.96 | Median:    0.92 | Max:    2.96
+  Foreground Displacement Energy (%)       | Min:   15.26 | Mean:   85.81 | Median:   89.09 | Max:   97.02
+  Clean-vs-Distorted Pixel MAE             | Min:    0.24 | Mean:    7.81 | Median:    7.88 | Max:   22.42
+  Clean-vs-Distorted Pixel RMSE            | Min:    1.93 | Mean:   18.55 | Median:   20.44 | Max:   45.85
+  FG Pixels Difference > 10 (%)            | Min:    8.21 | Mean:   54.38 | Median:   54.47 | Max:   88.51
+  FG Pixels Difference > 20 (%)            | Min:    0.50 | Mean:   34.00 | Median:   32.91 | Max:   78.16
+  FG Pixels Difference > 30 (%)            | Min:    0.00 | Mean:   23.08 | Median:   22.67 | Max:   65.99
+  Exact Inverse RMSE Improvement (%)       | Min:  -16.50 | Mean:   22.43 | Median:   22.04 | Max:   61.68
+
+--- LOCAL DISTORTION (N = 1500) ---
+  Foreground Mean Displacement (px)        | Min:    4.49 | Mean:   12.09 | Median:   12.00 | Max:   18.72
+  Foreground Median Displacement (px)      | Min:    4.23 | Mean:   12.10 | Median:   12.12 | Max:   19.41
+  Foreground P95 Displacement (px)         | Min:    4.73 | Mean:   20.19 | Median:   20.18 | Max:   25.37
+  Foreground Max Displacement (px)         | Min:    4.76 | Mean:   21.19 | Median:   21.19 | Max:   25.92
+  Background Mean Displacement (px)        | Min:    0.06 | Mean:    0.70 | Median:    0.67 | Max:    2.40
+  Foreground Displacement Energy (%)       | Min:   19.69 | Mean:   89.53 | Median:   93.17 | Max:   99.16
+  Clean-vs-Distorted Pixel MAE             | Min:    0.36 | Mean:    6.85 | Median:    6.79 | Max:   19.35
+  Clean-vs-Distorted Pixel RMSE            | Min:    1.95 | Mean:   16.69 | Median:   17.53 | Max:   38.60
+  FG Pixels Difference > 10 (%)            | Min:    8.35 | Mean:   54.35 | Median:   55.87 | Max:   91.64
+  FG Pixels Difference > 20 (%)            | Min:    0.25 | Mean:   33.88 | Median:   33.48 | Max:   82.61
+  FG Pixels Difference > 30 (%)            | Min:    0.00 | Mean:   22.76 | Median:   21.67 | Max:   74.88
+  Exact Inverse RMSE Improvement (%)       | Min:  -87.58 | Mean:   37.33 | Median:   38.25 | Max:   69.83
+
+--- BENDING DISTORTION (N = 1500) ---
+  Foreground Mean Displacement (px)        | Min:    3.85 | Mean:   14.54 | Median:   14.50 | Max:   19.27
+  Foreground Median Displacement (px)      | Min:    3.86 | Mean:   15.38 | Median:   15.38 | Max:   20.62
+  Foreground P95 Displacement (px)         | Min:    4.04 | Mean:   18.11 | Median:   18.15 | Max:   22.01
+  Foreground Max Displacement (px)         | Min:    4.07 | Mean:   18.29 | Median:   18.35 | Max:   22.31
+  Background Mean Displacement (px)        | Min:    0.05 | Mean:    1.11 | Median:    1.06 | Max:    3.25
+  Foreground Displacement Energy (%)       | Min:   18.91 | Mean:   87.25 | Median:   90.73 | Max:   97.49
+  Clean-vs-Distorted Pixel MAE             | Min:    0.34 | Mean:    8.65 | Median:    9.04 | Max:   24.58
+  Clean-vs-Distorted Pixel RMSE            | Min:    2.00 | Mean:   20.47 | Median:   22.79 | Max:   42.12
+  FG Pixels Difference > 10 (%)            | Min:    9.09 | Mean:   58.21 | Median:   59.61 | Max:   90.86
+  FG Pixels Difference > 20 (%)            | Min:    0.37 | Mean:   37.77 | Median:   38.55 | Max:   82.76
+  FG Pixels Difference > 30 (%)            | Min:    0.00 | Mean:   26.37 | Median:   26.75 | Max:   74.49
+  Exact Inverse RMSE Improvement (%)       | Min:  -32.32 | Mean:   38.19 | Median:   39.21 | Max:   73.65
+
+3. VISUAL AUDIT SUMMARY (experiments/classifier_v3_audit/visualizations/)
+----------------------------------------------------------------------
+  Total Samples Audited: 30 (10 bending, 10 elastic, 10 local)
+  Ratings Breakdown:
+    - CLEARLY VISIBLE: 18
+    - MODERATELY VISIBLE: 12
+  Barely Visible Count: 0 [PASS]
+
+4. EXACT INVERSE-WARP VERIFICATION
+----------------------------------------------------------------------
+  Elastic: Distorted RMSE = 18.55 -> Rectified RMSE = 14.38 (Improvement: 22.43%)
+  Local  : Distorted RMSE = 16.69 -> Rectified RMSE = 10.20 (Improvement: 37.33%)
+  Bending: Distorted RMSE = 20.47 -> Rectified RMSE = 12.50 (Improvement: 38.19%)
+
+5. READINESS CONCLUSION
+----------------------------------------------------------------------
+All integrity checks, quality thresholds, and visual acceptance criteria passed.
+V3 DATASET READY FOR CLASSIFIER TRAINING
+======================================================================

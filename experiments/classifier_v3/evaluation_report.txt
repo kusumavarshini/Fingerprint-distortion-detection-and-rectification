@@ -1,0 +1,59 @@
+===========================================================================
+CUSTOM CNN DISTORTION CLASSIFIER EVALUATION REPORT (V3 DATASET)
+===========================================================================
+Model Architecture:          FingerprintCNN (4 Conv blocks + Global Avg Pool + FC)
+Trainable Parameters:        389,057
+Training Epochs:             15 (Best epoch: 13)
+Optimal Validation Threshold:0.48 (Tuned strictly on validation set)
+
+1. BALANCED DATASET SAMPLE SIZES
+---------------------------------------------------------------------------
+Train: 2100 (1050 clean + 350 elastic + 350 local + 350 bending)
+Val:    450 ( 225 clean +  75 elastic +  75 local +  75 bending)
+Test:   450 ( 225 clean +  75 elastic +  75 local +  75 bending)
+
+2. OVERALL HELD-OUT TEST METRICS (THRESHOLD = 0.48)
+---------------------------------------------------------------------------
+Accuracy:           0.8556
+Precision:          0.8077
+Recall:             0.9333
+F1-Score:           0.8660
+Specificity:        0.7778
+Balanced Accuracy:  0.8556
+ROC-AUC:            0.9491
+Confusion Matrix:   TP=210, FP=50, TN=175, FN=15
+
+3. PER-DISTORTION BREAKDOWN ON TEST SET
+---------------------------------------------------------------------------
+  ELASTIC (N=75): Recall=0.9733 | Prec=0.5935 | F1=0.7374 | FN=2 | Mean Prob=0.8422
+  LOCAL   (N=75): Recall=0.8933 | Prec=0.5726 | F1=0.6979 | FN=8 | Mean Prob=0.7981
+  BENDING (N=75): Recall=0.9333 | Prec=0.5833 | F1=0.7179 | FN=5 | Mean Prob=0.8288
+
+4. COMPARISON vs FROZEN V1 BASELINE
+---------------------------------------------------------------------------
+  Test Accuracy        | V1: 0.8889 | V3: 0.8556 | Change: -3.75%
+  Test Precision       | V1: 0.9534 | V3: 0.8077 | Change: -15.28%
+  Test Recall          | V1: 0.8178 | V3: 0.9333 | Change: +14.12%
+  Test F1              | V1: 0.8804 | V3: 0.8660 | Change: -1.64%
+  Test ROC-AUC         | V1: 0.9432 | V3: 0.9491 | Change: +0.63%
+  Bending Recall       | V1: 0.4533 | V3: 0.9333 | Change: +105.89%
+  Bending F1           | V1: 0.6239 | V3: 0.7179 | Change: +15.07%
+
+5. REAL UNSEEN CLEAN FINGERPRINT AUDIT (data/split/test/)
+---------------------------------------------------------------------------
+Total Real Images:           225
+Correctly Classified Clean:  175 (77.78%)
+Falsely Classified Distorted:50 (22.22%)
+Real False Positive Rate:    0.2222
+Probability Mean/Median:     0.2885 / 0.2427
+
+6. DECISION SUMMARY
+---------------------------------------------------------------------------
+Did overall classifier improve?         NO
+Did bending detection improve?          YES (Recall: 0.9333 vs 0.4533)
+Did elastic detection remain strong?    YES
+Did local detection remain strong?      YES
+Final Held-out Test F1:                 0.8660
+Distorted test classified as clean (FN):15 / 225
+Real clean classified as distorted (FP):50 / 225
+===========================================================================

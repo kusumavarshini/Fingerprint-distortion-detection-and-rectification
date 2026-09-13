@@ -45,3 +45,18 @@ experiments/*.png
 
 # Temporary DDRNet sanity outputs
 experiments/final_results/_ddrnet_*
+
+# Generated classifier datasets and previews
+data/classifier_v3/
+data/classifier_v4/
+data/distorted_preview/
+data/distorted_preview_v2/
+data/train_distorted_backup/
+data/train_distorted_current_backup/
+data/train_distorted_exp2_final/
+# Large experiment archives
+ddrnet_train.zip
+ddrnet_val.zip
+
+# Raw third-party fingerprint dataset
+data/FAMILY FINGERPRINT DATASET/

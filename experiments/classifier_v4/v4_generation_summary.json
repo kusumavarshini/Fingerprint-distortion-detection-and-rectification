@@ -1,0 +1,15 @@
+{
+  "total_train": 2100,
+  "clean_total": 1050,
+  "distorted_total": 1050,
+  "clean_standard": 525,
+  "clean_aug_faint": 175,
+  "clean_aug_overinked": 175,
+  "clean_aug_partial": 175,
+  "distorted_std_elastic": 175,
+  "distorted_std_local": 175,
+  "distorted_std_bending": 175,
+  "distorted_qaug_elastic": 175,
+  "distorted_qaug_local": 175,
+  "distorted_qaug_bending": 175
+}

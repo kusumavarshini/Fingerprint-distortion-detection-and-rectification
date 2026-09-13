@@ -1,7 +1,5 @@
 import os
-from attrs import field
 import cv2
-from fastapi import params
 import numpy as np
 import pandas as pd
 
