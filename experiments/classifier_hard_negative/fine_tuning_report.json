@@ -1,0 +1,109 @@
+{
+  "best_epoch": 2,
+  "best_val_f1": 0.9762,
+  "locked_threshold": 0.6000000000000002,
+  "val_metrics": {
+    "threshold": 0.6000000000000002,
+    "accuracy": 0.9644,
+    "precision": 0.982,
+    "recall": 0.9704,
+    "f1": 0.9762,
+    "roc_auc": 0.992,
+    "tp": 655,
+    "fp": 12,
+    "tn": 213,
+    "fn": 20,
+    "confusion_matrix": {
+      "tp": 655,
+      "fp": 12,
+      "tn": 213,
+      "fn": 20
+    },
+    "n_samples": 900
+  },
+  "test_metrics": {
+    "accuracy": 0.9256,
+    "precision": 0.9484,
+    "recall": 0.9526,
+    "f1": 0.9505,
+    "roc_auc": 0.976,
+    "tp": 643,
+    "fp": 35,
+    "tn": 190,
+    "fn": 32,
+    "confusion_matrix": {
+      "tp": 643,
+      "fp": 35,
+      "tn": 190,
+      "fn": 32
+    },
+    "n_samples": 900,
+    "specificity": 0.8444,
+    "balanced_accuracy": 0.8985
+  },
+  "per_distortion": {
+    "elastic": {
+      "accuracy": 0.96,
+      "precision": 1.0,
+      "recall": 0.96,
+      "f1": 0.9796,
+      "roc_auc": 0.0,
+      "tp": 216,
+      "fp": 0,
+      "tn": 0,
+      "fn": 9,
+      "confusion_matrix": {
+        "tp": 216,
+        "fp": 0,
+        "tn": 0,
+        "fn": 9
+      },
+      "n_samples": 225
+    },
+    "local": {
+      "accuracy": 0.9422,
+      "precision": 1.0,
+      "recall": 0.9422,
+      "f1": 0.9703,
+      "roc_auc": 0.0,
+      "tp": 212,
+      "fp": 0,
+      "tn": 0,
+      "fn": 13,
+      "confusion_matrix": {
+        "tp": 212,
+        "fp": 0,
+        "tn": 0,
+        "fn": 13
+      },
+      "n_samples": 225
+    },
+    "bending": {
+      "accuracy": 0.9556,
+      "precision": 1.0,
+      "recall": 0.9556,
+      "f1": 0.9773,
+      "roc_auc": 0.0,
+      "tp": 215,
+      "fp": 0,
+      "tn": 0,
+      "fn": 10,
+      "confusion_matrix": {
+        "tp": 215,
+        "fp": 0,
+        "tn": 0,
+        "fn": 10
+      },
+      "n_samples": 225
+    }
+  },
+  "real_clean": {
+    "total": 225,
+    "false_positives": 10,
+    "false_positive_rate": 0.044444444444444446,
+    "probability_mean": 0.21795409750146905,
+    "probability_median": 0.17717184391063157,
+    "probability_min": 0.002734488498828103,
+    "probability_max": 0.7666796445152905
+  }
+}

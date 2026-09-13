@@ -44,8 +44,8 @@ PAGE_ICON = "🔍"
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-CLASSIFIER_CHECKPOINT = Path("experiments/experiment_5/best_model_exp5.pth")
-CLASSIFIER_THRESHOLD = 0.18
+CLASSIFIER_CHECKPOINT = Path("experiments/classifier_hard_negative/best_model.pth")
+CLASSIFIER_THRESHOLD = 0.60
 
 DDRNET_CHECKPOINT = Path("experiments/ddrnet_baseline/best_model.pth")
 
