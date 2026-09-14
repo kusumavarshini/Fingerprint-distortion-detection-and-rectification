@@ -1,3 +1,5 @@
 experiments/classifier_v4/v4_colab_training.zip filter=lfs diff=lfs merge=lfs -text
 experiments/classifier_hard_negative/best_model.pth filter=lfs diff=lfs merge=lfs -text
 experiments/ddrnet_baseline/best_model.pth filter=lfs diff=lfs merge=lfs -text
+data/rectification_val/** filter=lfs diff=lfs merge=lfs -text
+data/rectification_test/** filter=lfs diff=lfs merge=lfs -text
