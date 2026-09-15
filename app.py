@@ -1,4 +1,4 @@
-"""
+﻿"""
 Fingerprint Distortion Detection & Identification Application
 ============================================================
 A focused end-user application for fingerprint distortion detection,
@@ -28,6 +28,7 @@ import torch
 sys.path.insert(0, str(Path("DDRNet").resolve()))
 
 from model import FingerprintCNN
+# pyrefly: ignore [missing-import]
 from models.DDRNet_DIR import DDRNet_DIR
 from severity import (
     calculate_severity_statistics,
@@ -48,7 +49,7 @@ except ImportError:
 # =============================================================================
 
 PAGE_TITLE = "Fingerprint Distortion Detection & Identification"
-PAGE_ICON = "🔍"
+PAGE_ICON = "ðŸ”"
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -61,6 +62,7 @@ SEV_LOW_THRESHOLD = 4.2982
 SEV_MOD_THRESHOLD = 5.9275
 
 TEST_DIR = Path("data/split/test")
+GALLERY_DIR = Path("data/FAMILY FINGERPRINT DATASET/FAMILY FINGERPRINT DATASET")
 
 # =============================================================================
 # MODEL LOADERS (CACHED)
@@ -213,73 +215,130 @@ def enhance_fingerprint_for_display(image: np.ndarray) -> np.ndarray:
     return enhanced
 
 
-def perform_fingerprint_matching(candidate_image_224: np.ndarray) -> dict:
-    """
-    Perform biometric fingerprint matching against reference gallery.
-    Uses legitimate project AFIS / MindtctExtractor pipeline if available.
-    Adheres strictly to research integrity: does NOT invent fake or synthetic matches.
-    """
+@st.cache_resource
+def load_afis_gallery():
+    """Build and cache all 1,500 MINDTCT gallery templates."""
+    if not GALLERY_DIR.exists():
+        raise FileNotFoundError(f"Full fingerprint gallery not found at {GALLERY_DIR}")
+
+    extractor = MindtctExtractor()
+    ref_paths = sorted(GALLERY_DIR.glob("FAMILY-*/*/*.png"))
+    if not ref_paths:
+        raise FileNotFoundError(f"No PNG fingerprint images found under {GALLERY_DIR}")
+
+    progress = st.progress(0, text="Preparing AFIS gallery...")
+    templates = []
+    total = len(ref_paths)
+
+    for index, ref_path in enumerate(ref_paths, start=1):
+        ref_img = cv2.imread(str(ref_path), cv2.IMREAD_GRAYSCALE)
+        if ref_img is None:
+            continue
+        if ref_img.dtype != np.uint8:
+            ref_img = np.clip(ref_img, 0, 255).astype(np.uint8)
+        if ref_img.shape != (512, 512):
+            ref_img = cv2.resize(ref_img, (512, 512), interpolation=cv2.INTER_CUBIC)
+        try:
+            template = extractor.extract_minutiae(ref_img)
+            templates.append((ref_path.parent.parent.name, ref_path.parent.name, ref_path.name, template))
+        except Exception:
+            continue
+        if index == total or index % 25 == 0:
+            progress.progress(index / total, text=f"Preparing AFIS gallery: {index}/{total} images")
+
+    progress.empty()
+    if not templates:
+        raise RuntimeError("MINDTCT could not extract a usable template from the gallery.")
+    return templates
+
+
+def perform_fingerprint_matching(candidate_image: np.ndarray) -> dict:
+    """Identify a 512x512 fingerprint against the complete 300-identity gallery."""
+    threshold = 0.04
+
     if not AFIS_AVAILABLE:
         return {
             "status": "BACKEND_NOT_IMPLEMENTED",
-            "message": "The AFIS biometric matching backend (MindtctExtractor / Bozorth3) is not installed in the local Python environment. In accordance with research integrity standards, simulated or synthetic match results are not fabricated.",
-            "match_found": False,
-            "matched_id": None,
-            "score": None,
-            "threshold": None,
+            "message": "The AFIS biometric matching backend (MindtctExtractor / Bozorth3) is not installed.",
+            "match_found": False, "matched_id": None, "score": None, "threshold": threshold,
         }
 
-    if not TEST_DIR.exists():
+    if not GALLERY_DIR.exists():
         return {
             "status": "DATASET_NOT_FOUND",
-            "message": f"Reference test gallery not found at {TEST_DIR}.",
-            "match_found": False,
-            "matched_id": None,
-            "score": None,
-            "threshold": None,
+            "message": f"Full fingerprint gallery not found at {GALLERY_DIR}.",
+            "match_found": False, "matched_id": None, "score": None, "threshold": threshold,
         }
 
     try:
+        probe_image = candidate_image
+        if probe_image.ndim == 3:
+            probe_image = cv2.cvtColor(probe_image, cv2.COLOR_RGB2GRAY)
+        if probe_image.dtype != np.uint8:
+            probe_image = np.clip(probe_image, 0, 255).astype(np.uint8)
+        if probe_image.shape != (512, 512):
+            probe_image = cv2.resize(probe_image, (512, 512), interpolation=cv2.INTER_CUBIC)
+
         extractor = MindtctExtractor()
-        probe_template = extractor.extract_minutiae(candidate_image_224)
+        probe_template = extractor.extract_minutiae(probe_image)
+        gallery = load_afis_gallery()
 
         best_score = -1.0
         best_id = None
-        threshold = 25.0  # Standard Bozorth3 operational decision threshold
+        best_reference = None
+        identity_best = {}
+        valid_comparisons = 0
 
-        for family_dir in sorted(TEST_DIR.glob("FAMILY-*")):
-            for member_dir in sorted(family_dir.iterdir()):
-                if not member_dir.is_dir():
-                    continue
-                ref_images = sorted(member_dir.glob("*.png"))
-                if not ref_images:
-                    continue
-                ref_img = cv2.imread(str(ref_images[0]), cv2.IMREAD_GRAYSCALE)
-                if ref_img is None:
-                    continue
-                ref_template = extractor.extract_minutiae(ref_img)
-                res = extractor.match(probe_template, ref_template, method="bozorth3")
-                score = float(res.score if hasattr(res, "score") else res)
-                if score > best_score:
-                    best_score = score
-                    best_id = f"{family_dir.name} / {member_dir.name} ({ref_images[0].name})"
+        for family_name, member_name, ref_name, ref_template in gallery:
+            try:
+                result = extractor.match(
+                    probe_template,
+                    ref_template,
+                    method="bozorth3",
+                    height_a=512,
+                    height_b=512,
+                )
+                score = float(result.score if hasattr(result, "score") else result)
+                valid_comparisons += 1
+            except Exception:
+                continue
 
+            identity = f"{family_name} / {member_name}"
+            if identity not in identity_best or score > identity_best[identity]["score"]:
+                identity_best[identity] = {"score": score, "reference": ref_name}
+
+        if not identity_best:
+            return {
+                "status": "ERROR",
+                "message": "No valid fingerprint comparisons could be completed against the enrolled gallery.",
+                "match_found": False, "matched_id": None, "score": None, "threshold": threshold,
+                "gallery_identities": 0, "gallery_images": len(gallery), "valid_comparisons": valid_comparisons,
+            }
+
+        # Select the highest score at the identity level, after all five
+        # impressions have been compared for each identity.
+        best_id, best_info = max(identity_best.items(), key=lambda item: item[1]["score"])
+        best_score = float(best_info["score"])
+        best_reference = best_info["reference"]
         match_found = best_score >= threshold
+
         return {
             "status": "COMPLETED",
             "match_found": match_found,
             "matched_id": best_id if match_found else None,
             "score": best_score,
             "threshold": threshold,
+            "best_reference": best_reference,
+            "gallery_identities": len(identity_best),
+            "gallery_images": len(gallery),
+            "valid_comparisons": valid_comparisons,
         }
+
     except Exception as e:
         return {
             "status": "ERROR",
             "message": f"Matcher error: {e}",
-            "match_found": False,
-            "matched_id": None,
-            "score": None,
-            "threshold": None,
+            "match_found": False, "matched_id": None, "score": None, "threshold": threshold,
         }
 
 
@@ -369,8 +428,8 @@ st.markdown(
 st.markdown(
     """
     <div class="app-header">
-        <h1 class="app-title">🔍 Fingerprint Distortion Detection & Identification</h1>
-        <p class="app-subtitle">End-to-End Biometric Pipeline: Distortion Classification → DDRNet Rectification → Gallery Identification</p>
+        <h1 class="app-title">ðŸ” Fingerprint Distortion Detection & Identification</h1>
+        <p class="app-subtitle">End-to-End Biometric Pipeline: Distortion Classification â†’ DDRNet Rectification â†’ Gallery Identification</p>
     </div>
     """,
     unsafe_allow_html=True,
@@ -414,7 +473,7 @@ elif sample_presets[selected_preset] is not None and sample_presets[selected_pre
 # If no image selected, show placeholder instructions
 if raw_img is None:
     st.info(
-        "👆 **Get Started:** Upload a fingerprint image using the sidebar file uploader, "
+        "ðŸ‘† **Get Started:** Upload a fingerprint image using the sidebar file uploader, "
         "or select one of the reference test samples to execute the live pipeline."
     )
     st.stop()
@@ -461,7 +520,12 @@ if raw_img is not None:
         candidate_image = image_224
 
     # 5. Run Biometric Fingerprint Matching
-    match_info = perform_fingerprint_matching(candidate_image)
+    # AFIS uses the original-resolution grayscale fingerprint.
+    image_512 = image_gray
+    if image_512.shape != (512, 512):
+        image_512 = cv2.resize(image_512, (512, 512), interpolation=cv2.INTER_CUBIC)
+
+    match_info = perform_fingerprint_matching(image_512)
 
     # =============================================================================
     # MAIN RESULT VIEW: TWO-COLUMN APPLICATION LAYOUT
@@ -512,7 +576,7 @@ if raw_img is not None:
                         <div class="metric-item"><strong>Max Displacement:</strong> <code>{sev_stats['max_displacement']:.3f} px</code></div>
                     </div>
                     <p style="font-size: 0.82rem; color: #64748B; margin: 6px 0 0 0;">
-                        Thresholds: Low &lt; {SEV_LOW_THRESHOLD:.2f} px | Moderate {SEV_LOW_THRESHOLD:.2f}–{SEV_MOD_THRESHOLD:.2f} px | High &ge; {SEV_MOD_THRESHOLD:.2f} px
+                        Thresholds: Low &lt; {SEV_LOW_THRESHOLD:.2f} px | Moderate {SEV_LOW_THRESHOLD:.2f}â€“{SEV_MOD_THRESHOLD:.2f} px | High &ge; {SEV_MOD_THRESHOLD:.2f} px
                     </p>
                 </div>
                 """,
@@ -526,14 +590,14 @@ if raw_img is not None:
                 match_details = f"""
                 <div class="metric-row">
                     <div class="metric-item"><strong>Matched Identity:</strong> <code>{match_info['matched_id']}</code></div>
-                    <div class="metric-item"><strong>Score:</strong> <code>{match_info['score']:.1f}</code> (Threshold: {match_info['threshold']})</div>
+                    <div class="metric-item"><strong>Score:</strong> <code>{match_info['score']:.4f}</code> (Threshold: {match_info['threshold']:.4f})</div>
                 </div>
                 """
             else:
                 match_badge = '<span class="status-badge badge-unmatched">NO MATCH FOUND</span>'
                 match_details = f"""
                 <div class="metric-row">
-                    <div class="metric-item"><strong>Highest Gallery Score:</strong> <code>{match_info['score']:.1f}</code> (Threshold: {match_info['threshold']})</div>
+                    <div class="metric-item"><strong>Highest Gallery Score:</strong> <code>{match_info['score']:.4f}</code> (Threshold: {match_info['threshold']:.4f})</div>
                 </div>
                 <p style="font-size: 0.85rem; color: #64748B; margin: 6px 0 0 0;">No matching identity found in gallery above the required threshold.</p>
                 """
@@ -562,17 +626,17 @@ if raw_img is not None:
 
     if is_distorted and rectified_image is not None:
         st.markdown("---")
-        st.markdown("#### Diagnostic Visualization: Original → Enhanced → Rectified")
-        st.caption("Enhanced stage is for visualization only. Both FingerprintCNN and DDRNet strictly receive the original preprocessed 224×224 image.")
+        st.markdown("#### Diagnostic Visualization: Original â†’ Enhanced â†’ Rectified")
+        st.caption("Enhanced stage is for visualization only. Both FingerprintCNN and DDRNet strictly receive the original preprocessed 224Ã—224 image.")
 
         v_col1, v_col2, v_col3 = st.columns(3)
 
         with v_col1:
-            st.image(image_224, caption="1. Original Distorted (224×224)", width="stretch")
+            st.image(image_224, caption="1. Original Distorted (224Ã—224)", width="stretch")
 
         with v_col2:
             st.image(enhanced_image, caption="2. Enhanced (Visualization Only)", width="stretch")
-            st.caption("CLAHE enhanced — visualization only")
+            st.caption("CLAHE enhanced â€” visualization only")
 
         with v_col3:
             st.image(rectified_image, caption="3. DDRNet Rectified Output", width="stretch")
@@ -584,3 +648,8 @@ if raw_img is not None:
                 heatmap = cv2.applyColorMap(norm_mag, cv2.COLORMAP_JET)
                 heatmap_rgb = cv2.cvtColor(heatmap, cv2.COLOR_BGR2RGB)
                 st.image(heatmap_rgb, caption="Dense Displacement Magnitude Heatmap", width="stretch")
+
+
+
+
+
