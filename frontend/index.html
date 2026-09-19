@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fingerprint Authentication</title>
+</head>
+<body>
+
+    <h1>Fingerprint Authentication</h1>
+
+    <form id="authForm">
+        <label>
+            Identity ID:
+            <input
+                type="text"
+                id="identityCode"
+                placeholder="FAMILY-13/CHILD"
+                required
+            >
+        </label>
+
+        <br><br>
+
+        <label>
+            Fingerprint:
+            <input
+                type="file"
+                id="fingerprint"
+                accept="image/png,image/jpeg,image/jpg"
+                required
+            >
+        </label>
+
+        <br><br>
+
+        <button type="submit">AUTHENTICATE</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        document.getElementById("authForm").addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const identityCode =
+                document.getElementById("identityCode").value;
+
+            const fingerprint =
+                document.getElementById("fingerprint").files[0];
+
+            const resultDiv =
+                document.getElementById("result");
+
+            resultDiv.textContent = "Authenticating...";
+
+            const formData = new FormData();
+
+            formData.append("identity_code", identityCode);
+            formData.append("fingerprint", fingerprint);
+
+            try {
+                const response = await fetch(
+                    "http://127.0.0.1:8000/authenticate",
+                    {
+                        method: "POST",
+                        body: formData
+                    }
+                );
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.detail || "Authentication failed");
+                }
+
+                resultDiv.innerHTML = `
+                    <h2>
+                        ${result.authenticated
+                            ? "? AUTHENTICATED"
+                            : "? NOT AUTHENTICATED"}
+                    </h2>
+
+                    <p>Identity: ${result.identity_code}</p>
+                    <p>Distorted: ${result.is_distorted}</p>
+                    <p>Rectification applied: ${result.rectification_applied}</p>
+                    <p>Best score: ${result.best_score}</p>
+                `;
+
+            } catch (error) {
+                resultDiv.textContent =
+                    "Error: " + error.message;
+            }
+        });
+    </script>
+
+</body>
+</html>

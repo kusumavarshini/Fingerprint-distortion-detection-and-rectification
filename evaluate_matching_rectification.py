@@ -28,15 +28,14 @@ SPLITS = {
     "validation": {
         "clean": Path("data/split/val"),
         "distorted": Path("data/rectification_val/distorted"),
-        "rectified": Path("data/rectified_ddrnet_val"),
+        "rectified": Path("experiments/rectification_accuracy/full_val"),
     },
     "test": {
         "clean": Path("data/split/test"),
         "distorted": Path("data/rectification_test/distorted"),
-        "rectified": Path("data/rectified_ddrnet_test"),
+        "rectified": Path("experiments/rectification_accuracy/full_test"),
     },
 }
-
 
 def collect_identities(root: Path) -> dict[tuple[str, str], list[Path]]:
     identities: dict[tuple[str, str], list[Path]] = {}
@@ -282,3 +281,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
