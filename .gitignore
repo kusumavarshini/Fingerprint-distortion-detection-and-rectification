@@ -41,7 +41,7 @@ data/ddrnet_val/
 data/rectified_test/
 
 # Local diagnostic visualizations
-experiments/*.png
+experiments/**/*.png
 
 # Temporary DDRNet sanity outputs
 experiments/final_results/_ddrnet_*
